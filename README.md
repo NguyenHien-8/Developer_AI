@@ -4,7 +4,7 @@
 - Email MrHoang: hoangdeptrai181@gmail.com
 -----------------------------------------------------
 
-------------------------------------------------- Installation instructions --------------------------------------------------
+--------------------------------------------------- Installation instructions ----------------------------------------------------
 ```
 git clone https://github.com/NguyenHien-8/Developer_AI.git
 ```
