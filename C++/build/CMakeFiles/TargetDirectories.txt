@@ -1,0 +1,3 @@
+/home/huang/Documents/ABM/Face_C++/build/CMakeFiles/FaceApp.dir
+/home/huang/Documents/ABM/Face_C++/build/CMakeFiles/edit_cache.dir
+/home/huang/Documents/ABM/Face_C++/build/CMakeFiles/rebuild_cache.dir

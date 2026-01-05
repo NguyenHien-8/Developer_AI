@@ -1,0 +1,48 @@
+import cv2
+import tensorflow as tf
+# import tflite_runtime.interpreter as tflite
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+# interpreter = tf.lite.Interpreter(model_path="assets/gamodel.tflite")
+interpreter = tf.lite.Interpreter(model_path="models/gender_oval_blur.tflite")
+interpreter.allocate_tensors()
+
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+def hair_img_prepare(img, x, y, w, h):
+    padding_x = int(w * 0.2)
+    padding_y = int(h * 0.5)
+    x1 = max(x - padding_x, 0)
+    y1 = max(y - int(padding_y * 0.6), 0)
+    x2 = min(x + w + int(padding_x * 0.6), img.shape[1])
+    y2 = min(y + h + int(padding_y * 0.3), img.shape[0])
+    face_region = img[y:y+h, x:x+w]
+    blurred_face = cv2.GaussianBlur(face_region, (99, 99), 30)
+    mask = np.zeros((h, w), dtype=np.uint8) 
+    center = (w // 2, h // 2)
+    axes = (int(w * 0.4), int(h * 0.5))  
+    cv2.ellipse(mask, center, axes, 0, 0, 360, 255, -1)
+    mask_3ch = cv2.merge([mask, mask, mask])
+    face_with_blur = np.where(mask_3ch == 255, blurred_face, face_region)
+    img[y:y+h, x:x+w] = face_with_blur
+    full_face_hair_img = img[y1:y2, x1:x2].copy()
+    return full_face_hair_img
+    
+def gender_predict(face_img):
+    # rgb_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
+    gray = cv2.cvtColor(face_img, cv2.COLOR_RGB2GRAY)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+    darker = cv2.convertScaleAbs(blurred, alpha=0.7, beta=-10)
+    equalized = cv2.equalizeHist(darker)
+    img = cv2.resize(equalized, (160, 160))
+    img = np.array(img, dtype=np.float32)
+    img = img.reshape(1, 160, 160, 1)
+    img = img/255.0
+    interpreter.set_tensor(input_details[0]['index'], img)
+    interpreter.invoke()
+    gender_pred = interpreter.get_tensor(output_details[0]['index'])
+    # print(gender_pred)
+    gender_pred = str(gender_pred)
+    return gender_pred
