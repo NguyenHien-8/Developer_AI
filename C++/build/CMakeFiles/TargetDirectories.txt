@@ -1,3 +1,0 @@
-/home/huang/Documents/ABM/Voice_C++/build/CMakeFiles/VoiceOrder.dir
-/home/huang/Documents/ABM/Voice_C++/build/CMakeFiles/edit_cache.dir
-/home/huang/Documents/ABM/Voice_C++/build/CMakeFiles/rebuild_cache.dir
